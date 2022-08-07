@@ -1,24 +1,57 @@
+import React,{ useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  var person = {
-    name: "Abdul",
-    job: "fresher"
-  };
-  const products = [{name:'Photoshop', details:'$90.00'}]
+  const products = [
+    {name:'Photoshop', details:'$90.00'},
+    {name:'Adobe', details:'$80.00'},
+    {name:'PDF', details:'$70.00'},
+    {name:'Premier Elements', details:'$270.00'},
+  ]
   return (
     <div className="App">
-        <p>My first react {person.name}</p>
-        <p>My first react {person.job}</p>
-        <Person name="Abdul" job="student"></Person>
-        <Person name="Kyume" job="student"></Person>
-        <Person name="Takbir" job="student"></Person>
-        <Product name={products[0].name} details={products[0].details}></Product>
-    </div>
-    
+      <Counter></Counter>
+      <Users></Users>
+      <ul>
+        {
+          products.map(product => <li>{product.name} | {product.details}</li>)
+        }
+      </ul>
+      {
+        products.map(product => <Product name={product.name} details={product.details}></Product>)
+      } 
+    </div> 
   );
 }
 
+function Users(){
+  const [users, setUsers] = useState([])
+  useEffect(()=>{
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(res=> res.json())
+    .then(data => setUsers(data));
+  }, [])
+  return (
+    <div>
+      <h3>Dynamic User: {users.length}</h3>
+      {
+        users.map(user=> <li>{user.name}  ==|== {user.phone} ==|== {user.email}</li>)
+      }
+    </div>
+  )
+}
+
+function Counter(){
+  const [count, setCount] = useState(10);
+  const handleIncrease = () => setCount(count + 1);
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+      <button onClick={() => setCount(count - 1)}>Decrease</button>
+    </div>
+  );
+}
 
 function Product(prodcts){
   const productStyle={
@@ -36,13 +69,6 @@ function Product(prodcts){
       <button>Buy Now</button>
     </div>
   )
-}
-
-function Person(variable){
-    return <div>
-      <h1 style={{color:'red',backgroundColor:'lightblue'}}>name: {variable.name}</h1>
-      <h2 style={{color:'lightblue',backgroundColor:'red'}}>Friend: {variable.job}</h2>
-    </div>;
 }
 
 export default App;
